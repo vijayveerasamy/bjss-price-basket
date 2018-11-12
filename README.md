@@ -35,7 +35,9 @@ Doscounts can be found in the discounts.properties in the following format.
 #discounts.offers[index].Offer Name				Type		Value
 #discounts.offers[index].name 					String		Must be unique value
 #discounts.offers[index].type 					int			1=Amount, 2=Percentage, 3=Multi buy
+
 #discounts.offers[index].quantity				int			10 for 10 Percent / Cash amount 10	/ 1 Quantity discounted upon multi buy 3 for 2 deal
+
 #discounts.offers[index].item					String		Offer to be applied on the product
 #discounts.offers[index].requiredItem			String		Required product quantify this offer
 #discounts.offers[index].requiredItemMin		int			Minimum quantity of Required product quantify this offer

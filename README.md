@@ -26,23 +26,33 @@ Total: £1.30
 
 How to add products?
 Products can be found in the products.properties in the following format.
-#products.items[index].name 		String 	Must be unique value
-#products.items[index].price		int		100 for GBP 1
+
+#products.items[index].name 		   String 	Must be unique value
+
+#products.items[index].price		   int		100 for GBP 1
+
 #products.items[index].quantity		int
 
 How to add discounts?
 Doscounts can be found in the discounts.properties in the following format.
-#discounts.offers[index].Offer Name				Type		Value
+
+#discounts.offers[index].Offer     Name				Type		Value
+
 #discounts.offers[index].name 					String		Must be unique value
+
 #discounts.offers[index].type 					int			1=Amount, 2=Percentage, 3=Multi buy
 
-#discounts.offers[index].quantity				int			10 for 10 Percent / Cash amount 10	/ 1 Quantity discounted upon multi buy 3 for 2 deal
+#discounts.offers[index].quantity		int			10 for 10 Percent / Cash amount 10	/ 1 Quantity discounted upon multi buy 3 for 2 deal
 
-#discounts.offers[index].item					String		Offer to be applied on the product
-#discounts.offers[index].requiredItem			String		Required product quantify this offer
+#discounts.offers[index].item					        String		Offer to be applied on the product
+
+#discounts.offers[index].requiredItem			  String		Required product quantify this offer
+
 #discounts.offers[index].requiredItemMin		int			Minimum quantity of Required product quantify this offer
+
 #discounts.offers[index].applicableCount		int 		How many times can be applied on this cart
-#discounts.offers[index].expiryOn				String 		Offer expired on date DDMMYYYY
+
+#discounts.offers[index].expiryOn				     String 		Offer expired on date DDMMYYYY
 
 How to Run?
 You must have Maven and Java installed and configured. Unzip the bjss-price-basket project and build the project by using Maven:

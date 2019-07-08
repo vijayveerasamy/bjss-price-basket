@@ -9,6 +9,8 @@ import org.bjss.store.model.Item;
 import org.bjss.store.model.Offer;
 import org.bjss.store.service.EmptyCartException;
 import org.bjss.store.service.ShoppingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ShoppingServiceImpl implements ShoppingService {
 	private ProductsData productsData;
 	private DiscountsData discountsData;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingServiceImpl.class);
 	
 	public ProductsData getProductsData() {
 		return productsData;
@@ -61,11 +65,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Item cartItem = productsData.getShopItemForCart(itemName, quantity);
 			cartItems.put(itemName, cartItem);
 			operationStatus = true;
+			LOGGER.info("{} added successfully", itemName);
 		}
 		else if (cartItems.containsKey(itemName)==true && productsData.getShopItems().containsKey(itemName)==true) { 
 			Item cartItem = cartItems.get(itemName);
 			cartItem.setQuantity(cartItem.getQuantity()+1);
 			operationStatus = true;
+			LOGGER.info("{} quantity {} updated successfully", itemName, cartItem.getQuantity());
 		}
 		return operationStatus;
 	}
@@ -76,9 +82,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (cartItems.containsKey(itemName)==true) {
 			Item cartItem = cartItems.get(itemName);
 			cartItem.setQuantity(cartItem.getQuantity()-quantity);
-			if (cartItem.getQuantity()<=0)
+			if (cartItem.getQuantity()<=0) {
 				cartItems.remove(itemName);
+				LOGGER.info("{} cart qualtity decremented successfully", itemName);
+			}
+			else
+				LOGGER.info("{} removed from cart successfully", itemName);
 			operationStatus = true;
+
 		}
 		return operationStatus;
 	}
@@ -153,7 +164,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			expiredDate = sdf.parse(expiryOn);
 			expiryStatus = expiredDate.before(new Date());
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error("Invalid offer expired date");
 		}
 				
 		return expiryStatus;		
@@ -177,15 +188,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 			double itemTotal = e.getValue().getPrice()*e.getValue().getQuantity();
 			itemTotal = itemTotal/100;
 			if(itemTotal>1)
-				System.out.println(e.getValue().getName()+"x"+e.getValue().getQuantity()+"  "+ currencyFormat.format(itemTotal));
+				LOGGER.info(e.getValue().getName()+"x"+e.getValue().getQuantity()+"  "+ currencyFormat.format(itemTotal));
 			else
-				System.out.println(e.getValue().getName()+"x"+e.getValue().getQuantity()+"  "+ penceFormat.format(itemTotal));
+				LOGGER.info(e.getValue().getName()+"x"+e.getValue().getQuantity()+"  "+ penceFormat.format(itemTotal));
 		});
 		
         double subTotal = checkoutCart.getCartTotal();
         subTotal = subTotal/100;
 
-        System.out.println("Subtotal: "+ currencyFormat.format(subTotal) );
+		LOGGER.info("Subtotal: "+ currencyFormat.format(subTotal) );
 	
 		if (checkoutCart.getCheckoutOffers()!=null && checkoutCart.getCheckoutOffers().size()>0) {
 			checkoutCart.getCheckoutOffers().entrySet().stream().forEach(e ->{
@@ -195,19 +206,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 				offerSubTotal = offerSubTotal/100;
 
 				if (offerSubTotal >= 1)
-					System.out.println(checkoutOffer.getItem()+" "+checkoutOffer.getQuantity()+"% off: -"+ currencyFormat.format(offerSubTotal) );
+					LOGGER.info(checkoutOffer.getItem()+" "+checkoutOffer.getQuantity()+"% off: -"+ currencyFormat.format(offerSubTotal) );
 				else
-					System.out.println(checkoutOffer.getItem()+" "+checkoutOffer.getQuantity()+"% off: -"+ penceFormat.format(offerSubTotal) );
+					LOGGER.info(checkoutOffer.getItem()+" "+checkoutOffer.getQuantity()+"% off: -"+ penceFormat.format(offerSubTotal) );
 			});
 		}
-		else 
-			System.out.println("(no offers available)");
+		else
+			LOGGER.info("(no offers available)");
 		
 		double totalAmount = checkoutCart.getCartTotal() - checkoutCart.getOfferTotal();
 		
 		totalAmount = totalAmount/100;
-			
-		System.out.println("Total: "+ currencyFormat.format(totalAmount) );
+
+		LOGGER.info("Total: "+ currencyFormat.format(totalAmount) );
 	}
 
 }

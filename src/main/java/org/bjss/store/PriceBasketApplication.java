@@ -18,15 +18,11 @@ public class PriceBasketApplication implements CommandLineRunner {
 	private ShoppingService shoppingService;
 	
 	private Map<String,Item> cartItems;
-	
 
     @Override
     public void run(String... args) {
-    	
     	cartItems = shoppingService.createCartItems();
-
 		Arrays.asList(args).stream().forEach(i -> shoppingService.addItemToCart(cartItems, i,1));
-
     	CheckoutCart checkoutCart = null;
     	
     	try {
@@ -35,16 +31,12 @@ public class PriceBasketApplication implements CommandLineRunner {
 		} catch (EmptyCartException ex) {
 			ex.printStackTrace();
 		}
-    	
     }
     
     public static void main(String[] args) throws Exception {
-
         SpringApplication app = new SpringApplication(PriceBasketApplication.class);
-
         app.run(args);
     }
-    	
 
 	public ShoppingService getShoppingService() {
 		return shoppingService;
@@ -54,6 +46,4 @@ public class PriceBasketApplication implements CommandLineRunner {
 	public void setShoppingService(ShoppingService shoppingService) {
 		this.shoppingService = shoppingService;
 	}
-    
-    
 }

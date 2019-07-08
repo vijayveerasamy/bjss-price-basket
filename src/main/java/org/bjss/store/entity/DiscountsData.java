@@ -3,8 +3,6 @@ package org.bjss.store.entity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
 
 import org.bjss.store.model.CheckoutOffer;
@@ -37,7 +35,6 @@ public class DiscountsData {
 	@PostConstruct
 	public void setShopOffers() {
 		shopOffers = new HashMap<>();
-
 		offers.stream().forEach(o -> shopOffers.put(o.getName(), o));
 	}	
 	

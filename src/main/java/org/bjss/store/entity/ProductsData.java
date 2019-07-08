@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
-
 import java.util.HashMap;
 
 @Repository
@@ -32,7 +30,6 @@ public class ProductsData {
 	@PostConstruct
 	public void setShopItems() {
 		shopItems = new HashMap<>();
-
 		items.stream().forEach(i -> shopItems.put(i.getName(), i));
 	}
 

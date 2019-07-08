@@ -47,8 +47,12 @@ public interface ShoppingService {
 	 * @param cartItems
 	 * @throws EmptyCartException
 	 */
-	
 	public CheckoutCart checkout(Map<String, Item> cartItems) throws EmptyCartException;
 
+	/**
+	 * This method prints the checkout items, discounts, sub-total and total amount
+	 * @param checkoutCart
+	 * @throws EmptyCartException
+	 */
 	public void printCheckout(CheckoutCart checkoutCart) throws EmptyCartException;;
 }

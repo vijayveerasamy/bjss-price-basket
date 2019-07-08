@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ShoppingServiceImpl implements ShoppingService {
-	
 	private ProductsData productsData;
 	private DiscountsData discountsData;
 	

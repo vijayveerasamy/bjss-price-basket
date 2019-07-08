@@ -3,7 +3,6 @@ package org.bjss.store.model;
 import java.util.Map;
 
 public class CheckoutCart {
-	
 	private Map<String, Item> cartItems;
 	private Map<String, Offer> checkoutOffers;
 	private int cartTotal;

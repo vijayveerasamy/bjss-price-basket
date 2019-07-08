@@ -7,6 +7,9 @@ import javax.annotation.PostConstruct;
 
 import org.bjss.store.model.CheckoutOffer;
 import org.bjss.store.model.Offer;
+import org.bjss.store.service.impl.ShoppingServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
@@ -15,7 +18,8 @@ import org.springframework.stereotype.Repository;
 @PropertySource("classpath:discounts.properties")
 @ConfigurationProperties("discounts")
 public class DiscountsData {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(DiscountsData.class);
+
     private List<Offer> offers;
     
 	private Map<String, Offer> shopOffers;
@@ -36,6 +40,7 @@ public class DiscountsData {
 	public void setShopOffers() {
 		shopOffers = new HashMap<>();
 		offers.stream().forEach(o -> shopOffers.put(o.getName(), o));
+		LOGGER.info("Discount offers are loaded in to store successfully.");
 	}	
 	
 	public Map<String, Offer> getCheckoutOffers() {

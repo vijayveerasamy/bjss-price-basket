@@ -59,7 +59,7 @@ You must have Maven and Java installed and configured. Unzip the bjss-price-bask
 
 cd bjss-price-basket
 
-mvn clean package
+mvn clean package -Drun.arguments="Bread,Apples,Soup,Soup"
 
 You can now run the application:
 

@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ShoppingServiceImpl implements ShoppingService {
@@ -67,7 +68,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			cartItem.setQuantity(cartItem.getQuantity()+1);
 			operationStatus = true;
 		}
-		
 		return operationStatus;
 	}
 	
@@ -90,85 +90,50 @@ public class ShoppingServiceImpl implements ShoppingService {
 		
 		if (cartItems!=null &&cartItems.size()==0)
 			throw new EmptyCartException("No products found in the cart.");
-				
-		Item cartItem = null;
-		int cartTotal = 0;
-		
-		for (Map.Entry<String, Item> entry : cartItems.entrySet()) {
-			cartItem = entry.getValue();
-			cartTotal += cartItem.getPrice() * cartItem.getQuantity();
-		}
 
-		checkoutCart.setCartTotal(cartTotal);
+		AtomicInteger cartTotal = new AtomicInteger(0);
+
+		cartItems.entrySet().stream().forEach(e -> cartTotal.addAndGet(e.getValue().getPrice()*e.getValue().getQuantity()));
+
+		checkoutCart.setCartTotal(cartTotal.get());
 		
 		checkoutCart.setCartItems(cartItems);
 		
-		Item requiredCartItem = null;
-		
 		Map<String, Offer> shopOffers = discountsData.getShopOffers();
-		
-		Offer shopOffer = null;
-				
-		//actual count in the cart
-		int applicableQuantity = 0;
-		//offer amount
-		int offerAmount = 0;
-		
+
 		//offer total
-		int offerTotal = 0;
+		AtomicInteger offerTotal = new AtomicInteger(0);
 		
 		Map<String, Offer> checkoutOffers = discountsData.getCheckoutOffers();
-		
-		for (Map.Entry<String, Offer> entry : shopOffers.entrySet()) {
-			shopOffer = entry.getValue();
-			
-			//if offer expired, continue to next offer
-			if ( isExpired(shopOffer.getExpiryOn()) ) continue;
-			
-			//if offer is percentage type
-			if (shopOffer.getType()==Discount.PERCENTAGE.value()) {
-				
-				//both offer item, required item must be available in the cart
-				if (  cartItems.containsKey(shopOffer.getItem()) && cartItems.containsKey(shopOffer.getRequiredItem()) ) {
-					
-					cartItem = cartItems.get(shopOffer.getItem());	
-					requiredCartItem = cartItems.get(shopOffer.getRequiredItem());
-				
-					//if offer required quantity is less or equal to required item cart quantity
-					if ( shopOffer.getRequiredQuantityMin() <= requiredCartItem.getQuantity() ) {
-										
-						//applicable quantity determined by cart quantity divisible by offer required quantity minus reminder
-						applicableQuantity = requiredCartItem.getQuantity() - (requiredCartItem.getQuantity() % shopOffer.getRequiredQuantityMin());
-						
-						//Further applicable quantity determined based on offer applicable count and determined applicableQuantity which ever lesser
-						applicableQuantity = applicableQuantity > shopOffer.getApplicableCount() ? shopOffer.getApplicableCount() : applicableQuantity;
-						
-						//Actual applicable quantity is determined based on actual cart item quantity and available applicable quantity whichever lesser
-						applicableQuantity = applicableQuantity > cartItem.getQuantity() ? cartItem.getQuantity() : applicableQuantity;
-						
-						offerAmount = applicableQuantity * cartItem.getPrice() * shopOffer.getQuantity() /100;
-						
-						offerTotal += offerAmount;
-						
-						CheckoutOffer checkoutOffer = (CheckoutOffer) discountsData.getCheckoutOffer(shopOffer.getName());
-						
-						checkoutOffer.setOfferAppliedQuantity(applicableQuantity);
-						checkoutOffer.setOfferAmount(offerAmount);
-						
-						checkoutOffers.put(checkoutOffer.getName(), checkoutOffer);
-						
-					}
 
-					//offer required quantity greater then required quantity in the cart then continue to next offer
-					else if ( shopOffer.getRequiredQuantityMin() > cartItems.get(shopOffer.getRequiredItem()).getQuantity() ) 
-					continue;				
-					
-				}
-					
+		shopOffers.entrySet().stream().forEach(e-> {
+			if ( !isExpired(e.getValue().getExpiryOn())
+					&& e.getValue().getType()==Discount.PERCENTAGE.value()
+					&& cartItems.containsKey(e.getValue().getItem()) && cartItems.containsKey(e.getValue().getRequiredItem())
+					&& e.getValue().getRequiredQuantityMin() <= cartItems.get(e.getValue().getRequiredItem()).getQuantity()) {
+
+				//applicable quantity determined by cart quantity divisible by offer required quantity minus reminder
+				int applicableQuantity = cartItems.get(e.getValue().getRequiredItem()).getQuantity() -
+						(cartItems.get(e.getValue().getRequiredItem()).getQuantity() % e.getValue().getRequiredQuantityMin());
+
+				//Further applicable quantity determined based on offer applicable count and determined applicableQuantity which ever lesser
+				applicableQuantity = applicableQuantity > e.getValue().getApplicableCount() ? e.getValue().getApplicableCount() : applicableQuantity;
+
+				//Actual applicable quantity is determined based on actual cart item quantity and available applicable quantity whichever lesser
+				applicableQuantity = applicableQuantity > cartItems.get(e.getValue().getItem()).getQuantity() ? cartItems.get(e.getValue().getItem()).getQuantity() : applicableQuantity;
+
+				int offerAmount = applicableQuantity * cartItems.get(e.getValue().getItem()).getPrice() * e.getValue().getQuantity() /100;
+
+				offerTotal.addAndGet(offerAmount);
+
+				CheckoutOffer checkoutOffer = (CheckoutOffer) discountsData.getCheckoutOffer(e.getValue().getName());
+				checkoutOffer.setOfferAppliedQuantity(applicableQuantity);
+				checkoutOffer.setOfferAmount(checkoutOffer.getOfferAmount()+offerAmount);
+				checkoutOffers.put(checkoutOffer.getName(), checkoutOffer);
 			}
-		}	
+		});
 		
-		checkoutCart.setOfferTotal(offerTotal);
+		checkoutCart.setOfferTotal(offerTotal.get());
 			 
 		checkoutCart.setCheckoutOffers(checkoutOffers);
 		
@@ -208,26 +173,33 @@ public class ShoppingServiceImpl implements ShoppingService {
         pattern = "0.00p";
         
         DecimalFormat penceFormat = new DecimalFormat(pattern, symbols);
+
+		checkoutCart.getCartItems().entrySet().stream().forEach(e->{
+			double itemTotal = e.getValue().getPrice()*e.getValue().getQuantity();
+			itemTotal = itemTotal/100;
+			if(itemTotal>1)
+				System.out.println(e.getValue().getName()+"x"+e.getValue().getQuantity()+"  "+ currencyFormat.format(itemTotal));
+			else
+				System.out.println(e.getValue().getName()+"x"+e.getValue().getQuantity()+"  "+ penceFormat.format(itemTotal));
+		});
 		
         double subTotal = checkoutCart.getCartTotal();
         subTotal = subTotal/100;
-        
-        double offerSubTotal = 0;
 
         System.out.println("Subtotal: "+ currencyFormat.format(subTotal) );
 	
 		if (checkoutCart.getCheckoutOffers()!=null && checkoutCart.getCheckoutOffers().size()>0) {
-			for (Map.Entry<String, Offer> entry : checkoutCart.getCheckoutOffers().entrySet()) {
-				CheckoutOffer checkoutOffer = (CheckoutOffer) entry.getValue();
-				
-				offerSubTotal = checkoutOffer.getOfferAmount();
+			checkoutCart.getCheckoutOffers().entrySet().stream().forEach(e ->{
+				CheckoutOffer checkoutOffer = (CheckoutOffer) e.getValue();
+
+				double offerSubTotal = checkoutOffer.getOfferAmount();
 				offerSubTotal = offerSubTotal/100;
-				
-				if (offerSubTotal >= 1)				
+
+				if (offerSubTotal >= 1)
 					System.out.println(checkoutOffer.getItem()+" "+checkoutOffer.getQuantity()+"% off: -"+ currencyFormat.format(offerSubTotal) );
 				else
 					System.out.println(checkoutOffer.getItem()+" "+checkoutOffer.getQuantity()+"% off: -"+ penceFormat.format(offerSubTotal) );
-			}			
+			});
 		}
 		else 
 			System.out.println("(no offers available)");

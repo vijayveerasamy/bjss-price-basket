@@ -3,6 +3,7 @@ package org.bjss.store.entity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -19,7 +20,7 @@ public class DiscountsData {
 	
     private List<Offer> offers;
     
-	private Map<String, Offer> shopOffers;//instance bound
+	private Map<String, Offer> shopOffers;
 
 	public List<Offer> getOffers() {
 		return offers;
@@ -36,10 +37,8 @@ public class DiscountsData {
 	@PostConstruct
 	public void setShopOffers() {
 		shopOffers = new HashMap<>();
-		
-		for (Offer offer : this.offers) {
-			shopOffers.put(offer.getName(), offer);
-		}
+
+		offers.stream().forEach(o -> shopOffers.put(o.getName(), o));
 	}	
 	
 	public Map<String, Offer> getCheckoutOffers() {
@@ -47,7 +46,7 @@ public class DiscountsData {
 	}
 	
     public Offer getCheckoutOffer(String offerName) { 
-    	Offer shopOffer = (Offer) shopOffers.get(offerName);
+    	Offer shopOffer = shopOffers.get(offerName);
     	Offer newOffer = new CheckoutOffer();
     	
     	newOffer.setName(shopOffer.getName());

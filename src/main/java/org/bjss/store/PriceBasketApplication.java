@@ -1,5 +1,6 @@
 package org.bjss.store;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.bjss.store.model.CheckoutCart;
@@ -23,10 +24,9 @@ public class PriceBasketApplication implements CommandLineRunner {
     public void run(String... args) {
     	
     	cartItems = shoppingService.createCartItems();
-    	
-    	for (String itemName: args)
-    		shoppingService.addItemToCart(cartItems, itemName, 1);
-    	
+
+		Arrays.asList(args).stream().forEach(i -> shoppingService.addItemToCart(cartItems, i,1));
+
     	CheckoutCart checkoutCart = null;
     	
     	try {

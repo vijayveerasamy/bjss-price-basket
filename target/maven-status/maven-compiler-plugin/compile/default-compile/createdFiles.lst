@@ -1,0 +1,11 @@
+org/bjss/store/PriceBasketApplication.class
+org/bjss/store/service/ShoppingService.class
+org/bjss/store/model/CheckoutCart.class
+org/bjss/store/entity/DiscountsData.class
+org/bjss/store/model/Item.class
+org/bjss/store/model/Offer.class
+org/bjss/store/model/CheckoutOffer.class
+org/bjss/store/entity/ProductsData.class
+org/bjss/store/service/impl/ShoppingServiceImpl.class
+org/bjss/store/service/EmptyCartException.class
+org/bjss/store/model/Discount.class

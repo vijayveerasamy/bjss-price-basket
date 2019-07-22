@@ -4,10 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-
-import org.bjss.store.model.CheckoutOffer;
 import org.bjss.store.model.Offer;
-import org.bjss.store.service.impl.ShoppingServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -41,25 +38,5 @@ public class DiscountsData {
 		shopOffers = new HashMap<>();
 		offers.stream().forEach(o -> shopOffers.put(o.getName(), o));
 		LOGGER.info("Discount offers are loaded in to store successfully.");
-	}	
-	
-	public Map<String, Offer> getCheckoutOffers() {
-		return new HashMap<>();
 	}
-	
-    public Offer getCheckoutOffer(String offerName) { 
-    	Offer shopOffer = shopOffers.get(offerName);
-    	Offer newOffer = new CheckoutOffer();
-    	
-    	newOffer.setName(shopOffer.getName());
-    	newOffer.setType(shopOffer.getType());
-    	newOffer.setQuantity(shopOffer.getQuantity());
-    	newOffer.setItem(shopOffer.getItem());
-    	newOffer.setRequiredItem(shopOffer.getRequiredItem());
-    	newOffer.setRequiredQuantityMin(shopOffer.getRequiredQuantityMin());
-    	newOffer.setApplicableCount(shopOffer.getApplicableCount());
-    	newOffer.setExpiryOn(shopOffer.getExpiryOn());
-    	
-    	return newOffer;
-    } 
 }

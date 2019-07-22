@@ -1,26 +1,0 @@
-
-3squid:S3626¥"Remove this redundant jump.(ÉŠ©ƒ
-o
-squid:S135{"YReduce the total number of break and continue statements in this loop to use at most one.(áè™
-P
-squid:S106æ"9Replace this use of System.out or System.err by a logger.(şóŒë
-U
-squid:S106ğ"9Replace this use of System.out or System.err by a logger.(ğ‹„ıÿÿÿÿ
-@squid:S1148Á"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
-Dsquid:S1125="(Remove the literal "true" boolean value.(›ÎÂšûÿÿÿÿ
-bsquid:S2184ì"ECast one of the operands of this subtraction operation to a "double".(Æƒ¥Ëÿÿÿÿÿ
-?squid:S1125N"(Remove the literal "true" boolean value.(ĞĞö¸
-?squid:S1125B"(Remove the literal "true" boolean value.(‚ºªˆ
-U
-squid:S106ê"9Replace this use of System.out or System.err by a logger.(É½õáùÿÿÿÿ
-P
-squid:S106ä"9Replace this use of System.out or System.err by a logger.(ÆüÊÿ
-Esquid:S1125=")Remove the literal "false" boolean value.(›ÎÂšûÿÿÿÿ
-U
-squid:S106Ú"9Replace this use of System.out or System.err by a logger.(õŸšøÿÿÿÿ
-gsquid:S2259Õ"JA "NullPointerException" could be thrown; "checkoutCart" is nullable here.(˜ü–úÿÿÿÿ
-osquid:S22936"YReplace the type specification in this constructor call with the diamond operator ("<>").(Ìñ·
-?squid:S1125B"(Remove the literal "true" boolean value.(‚ºªˆ
-isquid:S3776Y"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(àí²¯
-Lsquid:S1066…"/Merge this if statement with the enclosing one.(ô˜à·ùÿÿÿÿ
-osquid:S3973¤"WUse curly braces or indentation to denote the code conditionally executed by this "if".(‘¥

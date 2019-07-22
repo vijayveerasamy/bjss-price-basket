@@ -1,13 +1,15 @@
 package org.bjss.store.model;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Map;
 
 public class CheckoutCart {
 	private Map<String, Item> cartItems;
 	private Map<String, Offer> checkoutOffers;
-	private int cartTotal;
-	private int offerTotal;
-	private int checkoutTotal;
+	private BigDecimal cartTotal = new BigDecimal(0, new MathContext(2));
+	private BigDecimal offerTotal = new BigDecimal(0, new MathContext(2));
+	private BigDecimal checkoutTotal = new BigDecimal(0, new MathContext(2));
 	
 	public Map<String, Item> getCartItems() {
 		return cartItems;
@@ -17,27 +19,27 @@ public class CheckoutCart {
 		this.cartItems = cartItems;
 	}
 
-	public int getCartTotal() {
+	public BigDecimal getCartTotal() {
 		return cartTotal;
 	}
 
-	public void setCartTotal(int cartTotal) {
+	public void setCartTotal(BigDecimal cartTotal) {
 		this.cartTotal = cartTotal;
 	}
 
-	public int getOfferTotal() {
+	public BigDecimal getOfferTotal() {
 		return offerTotal;
 	}
 
-	public void setOfferTotal(int offerTotal) {
+	public void setOfferTotal(BigDecimal offerTotal) {
 		this.offerTotal = offerTotal;
 	}
 
-	public int getCheckoutTotal() {
+	public BigDecimal getCheckoutTotal() {
 		return checkoutTotal;
 	}
 
-	public void setCheckoutTotal(int checkoutTotal) {
+	public void setCheckoutTotal(BigDecimal checkoutTotal) {
 		this.checkoutTotal = checkoutTotal;
 	}
 

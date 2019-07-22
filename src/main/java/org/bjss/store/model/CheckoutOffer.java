@@ -1,14 +1,17 @@
 package org.bjss.store.model;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 public class CheckoutOffer extends Offer {
-	private int offerAmount;
+	private BigDecimal offerAmount = new BigDecimal(0, new MathContext(2));
 	private int offerAppliedQuantity;
 
-	public int getOfferAmount() {
+	public BigDecimal getOfferAmount() {
 			return offerAmount;
 		}
 
-	public void setOfferAmount(int offerAmount) {
+	public void setOfferAmount(BigDecimal offerAmount) {
 			this.offerAmount = offerAmount;
 		}
 

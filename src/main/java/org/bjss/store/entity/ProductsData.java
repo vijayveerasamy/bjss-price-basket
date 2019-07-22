@@ -34,7 +34,7 @@ public class ProductsData {
 	public void setShopItems() {
 		shopItems = new HashMap<>();
 		items.stream().forEach(i -> shopItems.put(i.getName(), i));
-		LOGGER.info("Product items are loaded in to sstore successfully");
+		LOGGER.info("Product items are loaded in to store successfully");
 	}
 
 	public Map<String, Item> getShopItems() {

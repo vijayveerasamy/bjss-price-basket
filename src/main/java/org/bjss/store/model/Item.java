@@ -1,8 +1,11 @@
 package org.bjss.store.model;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+
 public class Item {
 	private String name;
-	private int price;
+	private BigDecimal price = new BigDecimal(0, new MathContext(2));
 	private int quantity;
 
 	public String getName() {
@@ -13,11 +16,11 @@ public class Item {
 		this.name = name;
 	}
 
-	public int getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	

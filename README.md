@@ -63,7 +63,7 @@ mvn clean package -Drun.arguments="Bread,Apples,Soup,Soup"
 
 You can now run the application:
 
-mvn spring-boot:run -Drun.arguments="Bread,Apples,Soup,Soup"
+mvn spring-boot:run -Drun.arguments="Bread,Apples,Soup,Milk,Soup"
 
 or
 
